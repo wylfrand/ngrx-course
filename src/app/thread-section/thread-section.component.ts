@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {ThreadsService} from "../services/threads.service";
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../store/application-state';
+import {LoadUserThreadsAction, ThreadSelectedAction} from '../store/actions';
+import {Observable} from 'rxjs/Observable';
 
+import {ThreadSummaryVM} from '../../../shared/model/thread-summary.vm';
+import {MapStateToFunction} from './map-state-functions';
 
 @Component({
   selector: 'thread-section',
@@ -9,16 +14,26 @@ import {ThreadsService} from "../services/threads.service";
 })
 export class ThreadSectionComponent implements OnInit {
 
-  constructor(private threadsService: ThreadsService) {
+  userName$: Observable<string>;
+  unreadMessagesCounter$: Observable<number>;
+  threadSummaries$: Observable<ThreadSummaryVM[]>;
 
+  constructor(private store: Store<ApplicationState>) {
+
+    this.userName$ = store.select(MapStateToFunction.userNameSelector);
+
+    this.unreadMessagesCounter$ = store
+      .map(MapStateToFunction.mapStateToUnreadMessagesCounter);
+    this.threadSummaries$ = store
+      .select(MapStateToFunction.mapStateToThreadSummariesSelector);
   }
 
-
-
   ngOnInit() {
+    this.store.dispatch(new LoadUserThreadsAction());
+  }
 
-        this.threadsService.loadUserThreads();
-
+  onThreadSelected(selectedThreadId: number) {
+    this.store.dispatch(new ThreadSelectedAction(selectedThreadId));
   }
 
 }
