@@ -18,7 +18,7 @@ export class MessageSectionComponent {
     participantNames$: Observable<string>;
     messages$: Observable<MessageVM[]>;
 
-    uiState:UiState;
+    uiState: UiState;
 
     constructor(private store: Store<ApplicationState>) {
 
@@ -31,8 +31,8 @@ export class MessageSectionComponent {
     }
 
 
-    onNewMessage(input:any) {
-        this.store.dispatch(new SendNewMessageAction({text:input.value, threadId: this.uiState.currentThreadId,
+    onNewMessage(input: any) {
+        this.store.dispatch(new SendNewMessageAction({text: input.value, threadId: this.uiState.currentThreadId,
                                 participantId: this.uiState.userId}));
         input.value = '';
     }

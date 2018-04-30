@@ -1,42 +1,45 @@
-import {Component, OnInit} from '@angular/core';
-import {ThreadsService} from "../services/threads.service";
-import {Store} from "@ngrx/store";
-import {ApplicationState} from "../store/application-state";
-import {UserThreadsLoadedAction, LoadUserThreadsAction, ThreadSelectedAction} from "../store/actions";
-import {Observable} from "rxjs";
-import {ThreadSummaryVM} from "./thread-summary.vm";
-import {userNameSelector} from "./userNameSelector";
-import {mapStateToUnreadMessagesCounter} from "./mapStateToUnreadMessagesCounter";
-import {stateToThreadSummariesSelector} from "./stateToThreadSummariesSelector";
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {ApplicationState} from '../store/application-state';
+import {ThreadSelectedAction} from '../store/actions';
+import {Observable} from 'rxjs';
+import {ThreadSummaryVM} from './thread-summary.vm';
+import {userNameSelector} from './userNameSelector';
+import {mapStateToUnreadMessagesCounter} from './mapStateToUnreadMessagesCounter';
+import {stateToThreadSummariesSelector} from './stateToThreadSummariesSelector';
+import {UiState} from '../store/ui-state';
+import * as _ from 'lodash';
 
 @Component({
-    selector: 'thread-section',
-    templateUrl: './thread-section.component.html',
-    styleUrls: ['./thread-section.component.css']
+  selector: 'thread-section',
+  templateUrl: './thread-section.component.html',
+  styleUrls: ['./thread-section.component.css'],
 })
 export class ThreadSectionComponent {
 
-    userName$: Observable<string>;
-    unreadMessagesCounter$: Observable<number>;
-    threadSummaries$: Observable<ThreadSummaryVM[]>;
-    currentSelectedThreadId$:Observable<number>;
+  userName$: Observable<string>;
+  unreadMessagesCounter$: Observable<number>;
+  threadSummaries$: Observable<ThreadSummaryVM[]>;
 
-    constructor(private store: Store<ApplicationState>) {
+  uiState: UiState;
 
-        this.userName$ = store.select(userNameSelector);
+  constructor(private store: Store<ApplicationState>) {
 
-        this.unreadMessagesCounter$ = store.map(mapStateToUnreadMessagesCounter);
+    this.userName$ = store.select(userNameSelector);
 
-        this.threadSummaries$ = store.select(stateToThreadSummariesSelector);
+    this.unreadMessagesCounter$ = store.map(mapStateToUnreadMessagesCounter);
 
-        this.currentSelectedThreadId$ = store.select(state => state.uiState.currentThreadId);
+    this.threadSummaries$ = store.select(stateToThreadSummariesSelector);
 
-    }
+    store.select(state => state.uiState)
+      .subscribe(uiState => this.uiState = _.cloneDeep(uiState));
+
+  }
 
 
-    onThreadSelected(selectedThreadId:number) {
-        this.store.dispatch(new ThreadSelectedAction(selectedThreadId));
-    }
+  onThreadSelected(selectedThreadId: number) {
+    this.store.dispatch(new ThreadSelectedAction({selectedThreadId, currentUserId: this.uiState.userId}));
+  }
 
 }
 

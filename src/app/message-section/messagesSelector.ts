@@ -1,38 +1,55 @@
 
 
 
-import {ApplicationState} from "../store/application-state";
-import {MessageVM} from "./message.vm";
-import {Message} from "../../../shared/model/message";
+import {ApplicationState} from '../store/application-state';
+import {MessageVM} from './message.vm';
+import {Message} from '../../../shared/model/message';
 import * as _ from 'lodash';
+import {Participant} from '../../../shared/model/participant';
+import {createSelector} from 'reselect';
 
+// The UI will be rerender if there are new messages by this call :
+export const messagesSelector = createSelector(getParticipants, getMessagesForCurrentThread, mapMessagesToMessageVM);
 
+function getMessagesForCurrentThread(state: ApplicationState): Message[] {
+  const currentThread = state.storeData.threads[state.uiState.currentThreadId];
+  return currentThread ? currentThread.messageIds.map(messageId => state.storeData.messages[messageId]) : [];
+}
 
-export function messagesSelector(state:ApplicationState): MessageVM[] {
-
-    const currentThreadId = state.uiState.currentThreadId;
-
-    if (!currentThreadId) {
-        return [];
-    }
-
-    const messageIds = state.storeData.threads[state.uiState.currentThreadId].messageIds;
-
-    const messages = messageIds.map(messageId =>  state.storeData.messages[messageId]);
-
-    return messages.map(_.partial(mapMessageToMessageVM, state));
+function getParticipants(state: ApplicationState) {
+  return state.storeData.participants;
 }
 
 
-
-function mapMessageToMessageVM(state: ApplicationState, message:Message): MessageVM {
+const mapMessageToMessageVM = _.memoize((participantName: string, message: Message): MessageVM => {
     return {
         id: message.id,
-        text:message.text,
+        text: message.text,
         timestamp: message.timestamp,
-        participantName: state.storeData.participants[message.participantId].name
+        participantName: participantName
     };
+},
+  (participantName: string, message: Message) => message.id + participantName
+  );
+
+/*
+function mapMessagesToMessageVM(participants: { [key: number]: Participant }, messages: Message[]) {
+  return messages.map(message => {
+    const participantsName = participants[message.participantId].name;
+    // return mapMessageToMessageVM(participantsName, message);
+  });
 }
+*/
+
+function mapMessagesToMessageVM(participants: { [key: number]: Participant }, messages: Message[]) {
+  return messages.map(message => {
+    const participantsName = participants[message.participantId].name;
+    return mapMessageToMessageVM(participantsName, message);
+  });
+}
+
+
+
 
 
 
