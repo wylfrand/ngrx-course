@@ -1,9 +1,7 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MessageListComponent } from './message-list.component';
+import {MessageListComponent} from './message-list.component';
 
 describe('MessageListComponent', () => {
   let component: MessageListComponent;
@@ -11,16 +9,13 @@ describe('MessageListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MessageListComponent ]
+      declarations: [MessageListComponent]
     })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
+      .compileComponents();
     fixture = TestBed.createComponent(MessageListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
