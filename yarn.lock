@@ -140,9 +140,9 @@
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-2.0.2.tgz#8255e29cc0276f108784c90481e3b96e6713154b"
 
-"@ngrx/router-store@^1.2.5":
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/@ngrx/router-store/-/router-store-1.2.5.tgz#1cff82c5488fab995872c6f0d57a29a7ac91e598"
+"@ngrx/router-store@^1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@ngrx/router-store/-/router-store-1.2.6.tgz#a2eb0ca515e9b367781f1030250dd64bb73c086b"
 
 "@ngrx/store-devtools@^3.2.2":
   version "3.2.4"
@@ -3429,7 +3429,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-ngrx-store-freeze@^0.1.6:
+ngrx-store-freeze@^0.1.9:
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/ngrx-store-freeze/-/ngrx-store-freeze-0.1.9.tgz#b20f18f21fd5efc4e1b1e05f6f279674d0f70c81"
   dependencies:
